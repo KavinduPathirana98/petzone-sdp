@@ -56,6 +56,10 @@ app.use("/question", QuestionRouter);
 const ProfileRouter = require("./routes/profileRoute");
 app.use("/profile", ProfileRouter);
 
+//event
+const EventRouter = require("./routes/eventRoute");
+app.use("/event", EventRouter);
+
 //run the app using port
 app.listen(PORT, () => {
   console.log(`Server is up and running on port number: ${PORT}`);

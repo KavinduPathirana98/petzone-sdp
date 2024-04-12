@@ -32,7 +32,7 @@ router.route("/add").post((req, res) => {
   });
 });
 
-//Get All Users
+//Search
 router.route("/search").post((req, res) => {
   const keyword = req.body.keyword;
   User.find({ First_name: new RegExp(keyword, "i") })
@@ -44,7 +44,7 @@ router.route("/search").post((req, res) => {
     });
 });
 
-//Search
+//Get All Users
 router.route("/").get((req, res) => {
   User.find()
     .then((user) => {
