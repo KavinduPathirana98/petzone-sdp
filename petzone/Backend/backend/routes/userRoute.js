@@ -34,9 +34,19 @@ router.route("/add").post((req, res) => {
   });
 });
 
-//get User
-//http://localhost:8050/user/
-//Get Request
+//Get All Users
+router.route("/search").post((req, res) => {
+  const keyword = req.body.keyword;
+  User.find({ First_name: new RegExp(keyword, "i") })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+//Search
 router.route("/").get((req, res) => {
   User.find()
     .then((user) => {
@@ -46,9 +56,6 @@ router.route("/").get((req, res) => {
       console.log(err);
     });
 });
-
-//User login
-//http://localhost:8050/user/login
 router.route("/login").post((req, res) => {
   const Password = req.body.Password;
   User.findOne({ Email: req.body.Email }).then((user) => {
