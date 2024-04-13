@@ -460,6 +460,18 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
+                      <label> Password </label>
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="password"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
                       <label> Category </label>
                       <select class="form-select" id="category">
                         <option value="2">Admin</option>
@@ -473,8 +485,9 @@
                   <div class="col-md-5"></div>
                   <div class="col-md-2">
                     <button
+                      type="button"
                       class="btn btn-primary col-md-12"
-                      onclick="addQuestion()"
+                      onclick="addEvent()"
                     >
                       Submit
                     </button>
@@ -539,6 +552,90 @@
     <!-- Page Specific JS -->
     <script src="assets/js/app.js"></script>
     <script>
+      async function getAll() {
+        await fetch("http://localhost:8050/user/", {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }).then(function (response) {
+          //   console.log(response);
+          reader = response.body.getReader();
+          return new Promise((resolve, reject) => {
+            function processStream({ done, value }) {
+              if (done) {
+                resolve();
+                return;
+              }
+              // process the data in the value property
+              console.log(value);
+
+              var string = new TextDecoder().decode(value);
+
+              var res = JSON.parse(string);
+              let arrx = [];
+              for (var i = 0; i < res.length; i++) {
+                var item = res[i];
+                if (item.Category == 0) {
+                  item.Category = "Volunteer";
+                } else if (item.Category == 1) {
+                  item.Category = "Organization";
+                } else {
+                  item.Category = "Admin";
+                }
+                arrx.push(item);
+              }
+              console.log(arrx);
+              let str = `  <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Category</th>
+          <th>Created on</th>
+          <th>Actions</th>
+          </tr>`;
+              for (var i = 0; i < arrx.length; i++) {
+                var list = arrx[i];
+
+                str =
+                  str +
+                  ` <tr>
+            <td>` +
+                  list._id +
+                  `</td>
+            <td>` +
+                  list.First_name +
+                  `</td>
+            <td>` +
+                  list.Last_name +
+                  `</td>
+            <td>` +
+                  list.Email +
+                  `</td>
+            <td>` +
+                  list.Category +
+                  `</td>
+            <td>` +
+                  list.CreatedOn +
+                  `</td>
+            <td><button class='btn btn-danger' type='button' onclick='delete_user("` +
+                  list._id +
+                  `")'>Delete</button></td>
+            </tr>`;
+              }
+              document.getElementById("userTable").innerHTML = str;
+              var coll = document.getElementsByClassName("collapsible");
+              var i;
+
+              // read the next chunk of data
+              reader.read().then(processStream);
+            }
+            // start reading the stream
+            console.log(reader.read().then(processStream));
+          });
+        });
+      }
       function search() {
         let input = document.getElementById("searchInput");
         fetch("http://localhost:8050/user/search", {
@@ -824,6 +921,53 @@
           console.log(reader.read().then(processStream));
         });
       });
+      function addEvent() {
+        let fname = document.getElementById("fname").value;
+        let lname = document.getElementById("lname").value;
+        let email = document.getElementById("email").value;
+        let category = document.getElementById("category").value;
+        let password = document.getElementById("password").value;
+
+        fetch("http://localhost:8050/user/add", {
+          method: "POST",
+          body: JSON.stringify({
+            First_name: fname,
+            Last_name: lname,
+            Email: email,
+            Password: password,
+            Category: category,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }).then(function (response) {
+          reader = response.body.getReader();
+          return new Promise((resolve, reject) => {
+            function processStream({ done, value }) {
+              if (done) {
+                resolve();
+                return;
+              }
+              // process the data in the value property
+              console.log(value);
+
+              var string = new TextDecoder().decode(value);
+              console.log(string);
+              var res = JSON.parse(string);
+              console.log(res);
+              if (res.code == 1) {
+                alert("User Added");
+              }
+              reader.read().then(processStream);
+            }
+            // start reading the stream
+            console.log(reader.read().then(processStream));
+          });
+        });
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+        getAll();
+      }
       // Get the modal
       var modal = document.getElementById("myModal");
 
