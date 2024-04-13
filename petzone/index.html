@@ -89,7 +89,7 @@
               class="d-inline-flex flex-column text-center px-3 border-right"
             >
               <h6>Email Us</h6>
-              <p class="m-0">wearepetzone@gmail.com</p>
+              <p class="m-0">petzone.sdp@gmail.com</p>
             </div>
             <div class="d-inline-flex flex-column text-center pl-3">
               <h6>Call Us</h6>
@@ -145,22 +145,10 @@
                 <a href="blog.html" class="dropdown-item">Blog Grid</a>
               </div>
             </div>
+            <div id="divprofile"></div>
           </div>
           <div>
-            <script>
-              function hide() {
-                if (!sessionStorage.getItem("User")) {
-                  var Lbtn = document.getElementById("Lbtn").style.visibility;
-                  Lbtn = "hidden";
-                }
-              }
-            </script>
-            <a
-              id="Lbtn"
-              href="../PetZone/login/login.html"
-              class="btn btn-lg btn-primary px-1 d-none d-lg-block"
-              >Sign In</a
-            >
+            <div id="btnlogin"></div>
           </div>
         </div>
       </nav>
@@ -716,7 +704,7 @@
                 Colombo 00600, Sri Lanka
               </p>
               <p><i class="fa fa-phone-alt mr-2"></i>+011 288 5549</p>
-              <p><i class="fa fa-envelope mr-2"></i>wearepetzone@gmail.com</p>
+              <p><i class="fa fa-envelope mr-2"></i>petzone.sdp@gmail.com</p>
               <div class="d-flex justify-content-start mt-4">
                 <a
                   class="btn btn-outline-light rounded-circle text-center mr-2 px-0"
@@ -843,5 +831,25 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+      console.log(sessionStorage.getItem("User"));
+      let str = "";
+      let divprofile = "";
+      if (JSON.parse(sessionStorage.getItem("User")) == null) {
+        str = ` <a
+        id='Lbtn'
+        href='../PetZone/login/login.html'
+        class='btn btn-lg btn-primary px-1 d-none d-lg-block'
+        >Sign In</a
+      >`;
+        console.log(str);
+        document.getElementById("btnlogin").innerHTML = str;
+      } else {
+        divprofile = ` <a href='profile/' class='nav-item nav-link'
+        >Profile</a
+      >`;
+        document.getElementById("divprofile").innerHTML = divprofile;
+      }
+    </script>
   </body>
 </html>

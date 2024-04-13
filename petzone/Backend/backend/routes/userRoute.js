@@ -1,9 +1,7 @@
 const router = require("express").Router();
 const { request } = require("express");
 let User = require("../models/userModel");
-
-//User Registration
-//http://localhost:8050/user/add
+//Save User
 router.route("/add").post((req, res) => {
   const First_name = req.body.First_name;
   const Last_name = req.body.Last_name;
@@ -34,9 +32,19 @@ router.route("/add").post((req, res) => {
   });
 });
 
-//get User
-//http://localhost:8050/user/
-//Get Request
+//Search
+router.route("/search").post((req, res) => {
+  const keyword = req.body.keyword;
+  User.find({ First_name: new RegExp(keyword, "i") })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+//Get All Users
 router.route("/").get((req, res) => {
   User.find()
     .then((user) => {
@@ -46,9 +54,14 @@ router.route("/").get((req, res) => {
       console.log(err);
     });
 });
-
-//User login
-//http://localhost:8050/user/login
+//Delete User
+router.route("/delete/:id").delete((req, res) => {
+  const userId = req.params.id;
+  User.findByIdAndDelete(userId).then((deletedUser) => {
+    res.json({ code: 1, msg: deletedUser });
+  });
+});
+//login User
 router.route("/login").post((req, res) => {
   const Password = req.body.Password;
   User.findOne({ Email: req.body.Email }).then((user) => {
