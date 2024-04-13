@@ -134,7 +134,7 @@
             <a href="onlinereservations.html" class="nav-item nav-link"
               >Online Reservations</a
             >
-            <a href="volunteer.html" class="nav-item nav-link"
+            <a href="onlinereservations.html" class="nav-item nav-link"
               >Volunteer Events</a
             >
             <div class="nav-item dropdown">
@@ -242,61 +242,10 @@
 
     <!-- About Start -->
     <div class="container py-5">
-      <div class="row py-5">
-        <div class="col-lg-7 pb-5 pb-lg-0 px-3 px-lg-5">
-          <h4 class="text-secondary mb-3">Welcome to PetZone</h4>
-          <h1 class="display-4 mb-4">
-            <span class="text-primary">Boarding</span> &
-            <span class="text-secondary">Reservations</span>
-          </h1>
-          <h5 class="text-muted mb-3">
-            We believe finding a reliable, professional pet sitter should be
-            easy. So we make sure every member of the Fetch Family is a
-            highly-experienced animal lover with a passion for petting and
-            playing.
-          </h5>
-          <p class="mb-4">All of our Pet Boarders and Staff:</p>
-          <ul class="list-inline">
-            <li>
-              <h5>
-                <i class="fa fa-check-double text-secondary mr-3"></i>Best In
-                Industry
-              </h5>
-            </li>
-            <li>
-              <h5>
-                <i class="fa fa-check-double text-secondary mr-3"></i>Go through
-                an In-depth Interview
-              </h5>
-            </li>
-            <li>
-              <h5>
-                <i class="fa fa-check-double text-secondary mr-3"></i>Provide
-                all necessary personal information
-              </h5>
-            </li>
-            <li>
-              <h5>
-                <i class="fa fa-check-double text-secondary mr-3"></i>24/7
-                Customer Support
-              </h5>
-            </li>
-          </ul>
-          <a href="" class="btn btn-lg btn-primary mt-3 px-4">Learn More</a>
-        </div>
-        <div class="col-lg-5">
-          <div class="row px-3">
-            <div class="col-12 p-0">
-              <img class="img-fluid w-100" src="img/about-1.jpg" alt="" />
-            </div>
-            <div class="col-6 p-0">
-              <img class="img-fluid w-100" src="img/about-2.jpg" alt="" />
-            </div>
-            <div class="col-6 p-0">
-              <img class="img-fluid w-100" src="img/about-3.jpg" alt="" />
-            </div>
-          </div>
-        </div>
+      <div id="vol"></div>
+      
+
+        
       </div>
     </div>
     <!-- About End -->
@@ -834,6 +783,169 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+      fetch("http://localhost:8050/event/", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).then(function (response) {
+        //   console.log(response);
+        reader = response.body.getReader();
+        return new Promise((resolve, reject) => {
+          function processStream({ done, value }) {
+            if (done) {
+              resolve();
+              return;
+            }
+            // process the data in the value property
+            console.log(value);
+
+            var string = new TextDecoder().decode(value);
+
+            var res = JSON.parse(string);
+            var arr = [];
+
+            let srt = "";
+            for (var i = 0; i < res.length; i++) {
+              var item = res[i];
+              str =
+                str +
+                `<div class="container">
+
+                          <div class="row justify-content-center">
+                              <div class="col-12 text-center mt-3">
+                                <h2 style="font-size: 60px; font-family: 'Times New Roman';">` +
+                item.title +
+                `</h2><br><br>
+                              </div>
+                          </div>
+
+                          <div class="row justify-content-center">
+                              <div class="col-md-8 col-lg-6">
+                                  <div class="card mx-auto" style="width: 80%;">
+
+                                      <img src="` +
+                item.image +
+                `" class="card-img-top" alt="Example Image">
+                                      <div class="card-body">
+
+                                          <h5 class="card-title">Description</h5>
+
+                                          <p class="card-text">` +
+                item.description +
+                `</p>
+
+                                          <h5 class="card-title">From : </h5>` +
+                item.fromDate +
+                `
+
+                                           <h5 class="card-title">To  :</h5>` +
+                item.toDate +
+                `
+                <h5 class="card-title">Venue  :</h5>` +
+                item.place +
+                `
+                 <div class="text-center">
+                                           
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>`;
+            }
+
+            document.getElementById("vol").innerHTML = str;
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            // read the next chunk of data
+            reader.read().then(processStream);
+          }
+          // start reading the stream
+          console.log(reader.read().then(processStream));
+        });
+      });
+      async function getAll() {
+        await fetch("http://localhost:8050/event/", {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }).then(function (response) {
+          //   console.log(response);
+          reader = response.body.getReader();
+          return new Promise((resolve, reject) => {
+            function processStream({ done, value }) {
+              if (done) {
+                resolve();
+                return;
+              }
+              // process the data in the value property
+              console.log(value);
+
+              var string = new TextDecoder().decode(value);
+
+              var res = JSON.parse(string);
+              let srt = "";
+              for (var i = 0; i < res.length; i++) {
+                var item = res[i];
+                str =
+                  str +
+                  `<div class="container">
+
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center mt-3">
+                              <h2 style="font-size: 60px; font-family: 'Times New Roman';">` +
+                  item.title +
+                  `</h2><br><br>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-md-8 col-lg-6">
+                                <div class="card mx-auto" style="width: 80%;">
+
+                                    <img src="test/image.jpeg" class="card-img-top" alt="Example Image">
+                                    <div class="card-body">
+
+                                        <h5 class="card-title">Description</h5>
+
+                                        <p class="card-text">` +
+                  item.description +
+                  `</p>
+
+                                        <h5 class="card-title">From : </h5>` +
+                  item.fromDate +
+                  `
+
+                                         <h5 class="card-title">To  :</h5>` +
+                  item.toDate +
+                  `
+                                        <div class="text-center">
+                                          <a href="#" class="btn btn-primary">Go somewhere</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+              }
+
+              document.getElementById("vol").innerHTML = str;
+              var coll = document.getElementsByClassName("collapsible");
+              var i;
+
+              // read the next chunk of data
+              reader.read().then(processStream);
+            }
+            // start reading the stream
+            console.log(reader.read().then(processStream));
+          });
+        });
+      }
+    </script>
     <script>
       console.log(sessionStorage.getItem("User"));
       let str = "";
