@@ -985,8 +985,10 @@
 							<td>` +
                   list.CreatedOn +
                   `</td>
-							<td><button class="btn btn-danger">Delete</button></td>
-						  </tr>`;
+				  <td><button class='btn btn-danger' type='button' onclick='delete_user("` +
+                  list._id +
+                  `")'>Delete</button></td>
+				</tr>`;
               }
               document.getElementById("userTable").innerHTML = str;
               var coll = document.getElementsByClassName("collapsible");
